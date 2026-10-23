@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Little Date ♡</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
+
+:root {
+  --pink: #f4b8c8;
+  --dark: #4b2635;
+  --cream: #fff8f0;
+  --rose: #df7897;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--dark);
+  background: #f8dce5;
+  background-image: radial-gradient(#ffffffaa 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+
+.hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.heart {
+  position: absolute;
+  bottom: -40px;
+  color: #df7897;
+  opacity: .35;
+  animation: floatUp 9s linear infinite;
+}
+
+@keyframes floatUp {
+  to { transform: translateY(-110vh) rotate(35deg); opacity: 0; }
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 28px, 520px);
+  margin: auto;
+  padding: 38px 0;
+}
+
+header { text-align: center; margin-bottom: 22px; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+h1, h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+h1 { font-size: clamp(32px, 8vw, 47px); margin: 10px 0; }
+h2 { font-size: 27px; margin: 8px 0; }
+p { line-height: 1.65; }
+
+.panel {
+  background: var(--cream);
+  border: 2px solid var(--dark);
+  border-radius: 5px;
+  padding: 25px;
+  box-shadow: 7px 7px 0 var(--dark);
+  margin-bottom: 22px;
+}
+
+.cover {
+  text-align: center;
+  padding: 34px 25px;
+  background: #f9cbd8;
+}
+
+.envelope {
+  font-size: 90px;
+  display: block;
+  margin: 12px auto;
+  animation: bob 2s ease-in-out infinite;
+}
+
+@keyframes bob {
+  50% { transform: translateY(-8px) rotate(-3deg); }
+}
+
+button.primary {
+  border: 2px solid var(--dark);
+  background: var(--dark);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 3px;
+  font-weight: bold;
+  transition: .2s;
+}
+
+button.primary:hover { transform: translateY(-2px); }
+
+button.secondary {
+  border: 1.5px solid var(--dark);
+  background: transparent;
+  color: var(--dark);
+  padding: 10px 16px;
+}
+
+.hidden { display: none !important; }
+
+label.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 20px 0 8px;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  border: 1.5px solid #c88b9e;
+  border-radius: 3px;
+  padding: 12px;
+  background: white;
+  color: var(--dark);
+}
+
+textarea { resize: vertical; min-height: 75px; }
+
+.calendar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendar-head button {
+  border: 1px solid var(--dark);
+  background: #f9d5df;
+  padding: 7px 11px;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.day-name, .day {
+  display: grid;
+  place-items: center;
+  min-height: 37px;
+  font-size: 13px;
+}
+
+.day-name { font-weight: bold; }
+
+.day {
+  border: 1px solid #e9bdca;
+  background: white;
+  color: var(--dark);
+}
+
+.day:disabled { opacity: .3; cursor: not-allowed; }
+
+.day.selected {
+  background: var(--rose);
+  color: white;
+  border-color: var(--dark);
+}
+
+.choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.choice {
+  background: #fff;
+  border: 1.5px solid #d9a1b1;
+  padding: 15px 8px;
+  border-radius: 4px;
+  color: var(--dark);
+}
+
+.choice span { display: block; font-size: 25px; margin-bottom: 7px; }
+.choice.active { background: #f6c3d2; border: 2px solid var(--dark); }
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.navigation button { flex: 1; }
+
+.summary {
+  background: #f9d5df;
+  border: 1px dashed var(--dark);
+  padding: 17px;
+  margin: 18px 0;
+}
+
+.summary p { margin: 8px 0; }
+
+footer {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 2px;
+  padding: 10px;
+}
+
+@media (max-width: 380px) {
+  .panel { padding: 18px; }
+  .choices { gap: 7px; }
+}
+</style>
+</head>
+
+<body>
+<div class="hearts" id="hearts"></div>
+
+<main>
+<header>
+  <div class="eyebrow">A little something for you ♡</div>
+  <h1>Our Date Planner</h1>
+  <p>Let's make a little memory together.</p>
+</header>
+
+<section class="panel cover" id="cover">
+  <div class="eyebrow">You've got a little letter!</div>
+  <div class="envelope">💌</div>
+  <h2>To my favorite person</h2>
+  <p>I have a tiny question for you...</p>
+  <p>Would you go on a date with me?</p>
+  <button class="primary" onclick="startPlanner()">Open my letter ♡</button>
+</section>
+
+<section class="panel hidden" id="step1">
+  <div class="eyebrow">01 — The day</div>
+  <h2>When are you free?</h2>
+  <p>Pick a date for our little adventure ♡</p>
+
+  <div class="calendar-head">
+    <button onclick="changeMonth(-1)" aria-label="Previous month">←</button>
+    <strong id="monthLabel"></strong>
+    <button onclick="changeMonth(1)" aria-label="Next month">→</button>
+  </div>
+  <div class="calendar" id="calendar"></div>
+  <p id="dateLabel">No date selected yet.</p>
+
+  <label class="field-label" for="time">What time works for you?</label>
+  <input type="text" id="time" placeholder="e.g. 3:00 PM">
+
+  <div class="navigation">
+    <button class="secondary" onclick="backToCover()">Back</button>
+    <button class="primary" onclick="goTo(2)">Next →</button>
+  </div>
+</section>
+
+<section class="panel hidden" id="step2">
+  <div class="eyebrow">02 — The plan</div>
+  <h2>What should we do?</h2>
+  <p>Choose your favorite date activity. You can pick more than one!</p>
+
+  <div class="choices" id="activities">
+    <button class="choice" data-value="Cafe date" onclick="toggleChoice(this)">
+      <span>☕</span>Cafe date
+    </button>
+    <button class="choice" data-value="Movie date" onclick="toggleChoice(this)">
+      <span>🎬</span>Movie date
+    </button>
+    <button class="choice" data-value="Dinner date" onclick="toggleChoice(this)">
+      <span>🍝</span>Dinner date
+    </button>
+    <button class="choice" data-value="Picnic" onclick="toggleChoice(this)">
+      <span>🌷</span>Picnic
+    </button>
+    <button class="choice" data-value="Shopping" onclick="toggleChoice(this)">
+      <span>🛍️</span>Shopping
+    </button>
+    <button class="choice" data-value="Surprise me" onclick="toggleChoice(this)">
+      <span>🎁</span>Surprise me
+    </button>
+  </div>
+
+  <label class="field-label" for="place">Where should we go?</label>
+  <input type="text" id="place" placeholder="A cafe, restaurant, or any place...">
+
+  <label class="field-label" for="note">A little message (optional)</label>
+  <textarea id="note" placeholder="Anything you want to say..."></textarea>
+
+  <div class="navigation">
+    <button class="secondary" onclick="goTo(1)">← Back</button>
+    <button class="primary" onclick="goTo(3)">Next →</button>
+  </div>
+</section>
+
+<section class="panel hidden" id="step3">
+  <div class="eyebrow">03 — Just for us</div>
+  <h2>Our little plan ♡</h2>
+  <p>Here's what we're planning together!</p>
+
+  <div class="summary" id="summary"></div>
+
+  <p style="text-align:center">Can't wait to make this memory with you. ♡</p>
+
+  <div class="navigation">
+    <button class="secondary" onclick="goTo(2)">← Edit plan</button>
+    <button class="primary" onclick="finishDate()">It's a date! 💗</button>
+  </div>
+</section>
+
+<section class="panel cover hidden" id="final">
+  <div class="envelope">💗</div>
+  <div class="eyebrow">It's official!</div>
+  <h2>We have a date!</h2>
+  <p id="finalMessage"></p>
+  <p>Here's to our little story. ♡</p>
+  <button class="primary" onclick="restart()">Plan another date ↻</button>
+</section>
+
+<footer>MADE WITH LOVE ♡ JUST FOR YOU</footer>
+</main>
+
+<script>
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+let viewMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+let selectedDate = '';
+let selectedActivities = [];
+
+const monthNames = [
+  'January', 'February', 'March', 'April',
+  'May', 'June', 'July', 'August',
+  'September', 'October', 'November', 'December'
+];
+
+function startPlanner() {
+  document.getElementById('cover').classList.add('hidden');
+  goTo(1);
+}
+
+function backToCover() {
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('cover').classList.remove('hidden');
+}
+
+function goTo(number) {
+  if (number === 2 && !selectedDate) {
+    alert('Choose a date first, please! ♡');
+    return;
+  }
+
+  if (number === 3) {
+    if (selectedActivities.length === 0) {
+      alert('Choose at least one activity! ♡');
+      return;
+    }
+    renderSummary();
+  }
+
+  [1, 2, 3].forEach(n => {
+    document.getElementById('step' + n).classList.toggle('hidden', n !== number);
+  });
+
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('final').classList.add('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function changeMonth(amount) {
+  const next = new Date(
+    viewMonth.getFullYear(),
+    viewMonth.getMonth() + amount,
+    1
+  );
+
+  if (next < new Date(today.getFullYear(), today.getMonth(), 1)) return;
+
+  viewMonth = next;
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const calendar = document.getElementById('calendar');
+  calendar.innerHTML = '';
+
+  document.getElementById('monthLabel').textContent =
+    monthNames[viewMonth.getMonth()] + ' ' + viewMonth.getFullYear();
+
+  ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach(day => {
+    const el = document.createElement('div');
+    el.className = 'day-name';
+    el.textContent = day;
+    calendar.appendChild(el);
+  });
+
+  const firstDay = new Date(
+    viewMonth.getFullYear(), viewMonth.getMonth(), 1
+  ).getDay();
+
+  const daysInMonth = new Date(
+    viewMonth.getFullYear(), viewMonth.getMonth() + 1, 0
+  ).getDate();
+
+  for (let i = 0; i < firstDay; i++) {
+    calendar.appendChild(document.createElement('div'));
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(
+      viewMonth.getFullYear(), viewMonth.getMonth(), day
+    );
+    const key = [
+      date.getFullYear(),
+      String(date.getMonth() + 1).padStart(2, '0'),
+      String(day).padStart(2, '0')
+    ].join('-');
+
+    const button = document.createElement('button');
+    button.className = 'day';
+    button.textContent = day;
+    button.disabled = date < today;
+    button.classList.toggle('selected', key === selectedDate);
+
+    button.onclick = () => {
+      selectedDate = key;
+      renderCalendar();
+      document.getElementById('dateLabel').textContent =
+        'Our date: ' + date.toLocaleDateString('en-GB', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        });
+    };
+
+    calendar.appendChild(button);
+  }
+
+  document.querySelector('.calendar-head button').disabled =
+    viewMonth.getFullYear() === today.getFullYear() &&
+    viewMonth.getMonth() === today.getMonth();
+}
+
+function toggleChoice(button) {
+  const value = button.dataset.value;
+  button.classList.toggle('active');
+
+  if (selectedActivities.includes(value)) {
+    selectedActivities = selectedActivities.filter(x => x !== value);
+  } else {
+    selectedActivities.push(value);
+  }
+}
+
+function renderSummary() {
+  const date = new Date(selectedDate + 'T12:00:00');
+  const niceDate = date.toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+
+  const items = [
+    ['♡ Date', niceDate],
+    ['◷ Time', document.getElementById('time').value.trim() || 'To be decided'],
+    ['✿ Activities', selectedActivities.join(', ')],
+    ['⌖ Place', document.getElementById('place').value.trim() || 'A surprise!'],
+    ['✉ Message', document.getElementById('note').value.trim() || 'Just happy to be together ♡']
+  ];
+
+  const summary = document.getElementById('summary');
+  summary.replaceChildren();
+
+  items.forEach(([label, value]) => {
+    const p = document.createElement('p');
+    const strong = document.createElement('strong');
+    strong.textContent = label + ': ';
+    p.append(strong, document.createTextNode(value));
+    summary.appendChild(p);
+  });
+}
+
+function finishDate() {
+  const message = 'See you on ' +
+    new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-GB', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    }) + '! ♡';
+
+  document.getElementById('finalMessage').textContent = message;
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('final').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  selectedDate = '';
+  selectedActivities = [];
+  document.getElementById('time').value = '';
+  document.getElementById('place').value = '';
+  document.getElementById('note').value = '';
+  document.querySelectorAll('.choice').forEach(el => el.classList.remove('active'));
+  viewMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  document.getElementById('final').classList.add('hidden');
+  document.getElementById('cover').classList.remove('hidden');
+  document.getElementById('dateLabel').textContent = 'No date selected yet.';
+  renderCalendar();
+}
+
+function makeHearts() {
+  const container = document.getElementById('hearts');
+  for (let i = 0; i < 18; i++) {
+    const heart = document.createElement('span');
+    heart.className = 'heart';
+    heart.textContent = Math.random() > .5 ? '♡' : '♥';
+    heart.style.left = Math.random() * 100 + '%';
+    heart.style.animationDelay = Math.random() * 9 + 's';
+    heart.style.animationDuration = (7 + Math.random() * 7) + 's';
+    heart.style.fontSize = (12 + Math.random() * 20) + 'px';
+    container.appendChild(heart);
+  }
+}
+
+renderCalendar();
+makeHearts();
+</script>
+</body>
+</html>
